@@ -10,10 +10,9 @@ import javax.jms.*;
  */
 public class SenderQueueDelay {
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
 
         // 1.获取连接工厂
-
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
                 "admin",
                 "admin",
@@ -35,7 +34,7 @@ public class SenderQueueDelay {
 //        producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT); //设置非持久化
 //        for (int i = 0; i < 10; i++) {
 //            TextMessage textMessage = session.createTextMessage("hi: " + i);
-            // 5.3 向目的地写入消息
+        // 5.3 向目的地写入消息
 //            if(i % 4 == 0) {
 //                // 设置消息的优先级
 //                // 对producer 整体设置
@@ -43,14 +42,14 @@ public class SenderQueueDelay {
 //                //	producer.send(textMessage,DeliveryMode.PERSISTENT,9,1000 * 100);
 //                textMessage.setJMSPriority(9);
 //            }
-            ObjectMessage objectMessage = session.createObjectMessage(new Girl("张三", 18, 100.0));
-            long delay = 10 * 1000;
-            long period = 2 * 1000;
-            int repeat = 9;
-            objectMessage.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_DELAY, delay);
-            objectMessage.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_PERIOD, period);
-            objectMessage.setIntProperty(ScheduledMessage.AMQ_SCHEDULED_REPEAT, repeat);
-        objectMessage.setIntProperty("age",10);
+        ObjectMessage objectMessage = session.createObjectMessage(new Girl("张三", 18, 100.0));
+        long delay = 10 * 1000;
+        long period = 2 * 1000;
+        int repeat = 9;
+        objectMessage.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_DELAY, delay);
+        objectMessage.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_PERIOD, period);
+        objectMessage.setIntProperty(ScheduledMessage.AMQ_SCHEDULED_REPEAT, repeat);
+        objectMessage.setIntProperty("age", 10);
 
         ObjectMessage objectMessage2 = session.createObjectMessage(new Girl("李四", 30, 200.0));
         long delay2 = 10 * 1000;
@@ -59,20 +58,19 @@ public class SenderQueueDelay {
         objectMessage2.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_DELAY, delay2);
         objectMessage2.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_PERIOD, period2);
         objectMessage2.setIntProperty(ScheduledMessage.AMQ_SCHEDULED_REPEAT, repeat2);
-        objectMessage2.setIntProperty("age",30);
+        objectMessage2.setIntProperty("age", 30);
 //            MapMessage mapMessage = session.createMapMessage();
 //            mapMessage.setString("map测试","success");
 
 //            producer.send(textMessage);
-            producer.send(objectMessage);
+        producer.send(objectMessage);
         producer.send(objectMessage2);
 //            producer.send(mapMessage);
-            //	Thread.sleep(3000);
+//	          Thread.sleep(3000);
 //            if(i%10==0){
 //                textMessage.acknowledge();
 //            }
 //        }
-
         // 6.关闭连接
         connection.close();
         System.out.println("System exit....");

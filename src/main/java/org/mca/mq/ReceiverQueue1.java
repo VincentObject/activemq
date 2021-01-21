@@ -26,7 +26,7 @@ public class ReceiverQueue1 {
 				);
 		// 2.获取一个向ActiveMQ的连接
 		Connection connection = connectionFactory.createConnection();
-		connection.start();
+		connection.start();//消费者必须开启connection.start()
 		// 3.获取session
 		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 		// 4. 找目的地，获取destination，消费端，也会从这个目的地取消息
