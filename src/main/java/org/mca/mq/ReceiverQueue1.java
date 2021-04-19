@@ -14,6 +14,11 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 /**
  * active-mq 消息接收
  */
+
+/**
+ * 独占消费者
+ *  Queue queue = session.createQueue("xxoo?consumer.exclusive=true");
+ */
 public class ReceiverQueue1 {
 
 	public static void main(String[] args) throws Exception{
@@ -22,7 +27,7 @@ public class ReceiverQueue1 {
 		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
 				"admin",
 				"admin",
-				"tcp://47.105.71.60:61616"
+				"tcp://47.105.71.60:5671"
 				);
 		// 2.获取一个向ActiveMQ的连接
 		Connection connection = connectionFactory.createConnection();
@@ -46,10 +51,33 @@ public class ReceiverQueue1 {
 //				message.acknowledge();
 		}
 	}
-	/*
-	 * 还有个问题就是receiver端createsession时是true，后面的参数为啥不会被覆盖？
-	 * 
-	 * 老师有点不理解，你未确认，另外一个消费者不重复消费？但你再重开消费者一个就能消费
+
+	/**
+	 * **如果遇到此类报错**
+	 * Exception in thread "main" javax.jms.JMSException: Failed to build body from content. Serializable class not available to broker. Reason: java.lang.ClassNotFoundException: Forbidden class com.mashibing.mq.Girl! This class is not trusted to be serialized as ObjectMessage payload. Please take a look at http://activemq.apache.org/objectmessage.html for more information on how to configure trusted classes.
+	 * 	at org.apache.activemq.util.JMSExceptionSupport.create(JMSExceptionSupport.java:36)
+	 * 	at org.apache.activemq.command.ActiveMQObjectMessage.getObject(ActiveMQObjectMessage.java:213)
+	 * 	at com.mashibing.mq.Receiver.main(Receiver.java:65)
+	 * Caused by: java.lang.ClassNotFoundException: Forbidden class com.mashibing.mq.Girl! This class is not trusted to be serialized as ObjectMessage payload. Please take a look at http://activemq.apache.org/objectmessage.html for more information on how to configure trusted classes.
+	 * 	at org.apache.activemq.util.ClassLoadingAwareObjectInputStream.checkSecurity(ClassLoadingAwareObjectInputStream.java:112)
+	 * 	at org.apache.activemq.util.ClassLoadingAwareObjectInputStream.resolveClass(ClassLoadingAwareObjectInputStream.java:57)
+	 * 	at java.io.ObjectInputStream.readNonProxyDesc(ObjectInputStream.java:1868)
+	 * 	at java.io.ObjectInputStream.readClassDesc(ObjectInputStream.java:1751)
+	 * 	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:2042)
+	 * 	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1573)
+	 * 	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:431)
+	 * 	at org.apache.activemq.command.ActiveMQObjectMessage.getObject(ActiveMQObjectMessage.java:211)
+	 *
+	 * 	需要添加信任
+	 * 			connectionFactory.setTrustedPackages(
+	 * 				new ArrayList<String>(
+	 * 						Arrays.asList(
+	 * 								new String[]{
+	 * 										Girl.class.getPackage().getName()
+	 *                                                                                }
+	 * 								)
+	 * 						)
+	 * 				);
 	 */
 	
 }
