@@ -79,5 +79,7 @@ public class ReceiverQueue1 {
 	 * 						)
 	 * 				);
 	 */
-	
+	/**
+	 * 如果设置prechSize 则是boker根据prechSize大小异步推送消息，如果不设置，则customer去向boker单条拉取消息
+	 */
 }
